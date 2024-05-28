@@ -1,0 +1,164 @@
+import { initGPU } from "@lib/utils";
+import vertices from "@lib/mesh/screen";
+
+let frame = 0;
+
+type Options = {
+    update:boolean
+    update_interval: number,
+}
+
+
+export async function init_and_run(shader: string, options: Options = { 
+    update_interval: 1000 / 60 ,
+    update:true
+
+}) {
+
+    const { canvas, context, device, adapter, canvasFormat } = await initGPU();
+
+    canvas.width = Math.min(window.innerWidth, window.innerHeight);
+    canvas.height = Math.min(window.innerWidth, window.innerHeight);
+
+
+    /********************************************************************* */
+
+    const uniformArray = new Float32Array([canvas.width, canvas.height]);
+    const uniformBuffer = device.createBuffer({
+        label: "Uniforms",
+        size: uniformArray.byteLength,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
+    device.queue.writeBuffer(uniformBuffer, 0, uniformArray)
+
+    const frameCount = new Uint32Array(1);
+    const frameUniformBuffer = device.createBuffer({
+        label: "frame count uniforms",
+        size: frameCount.byteLength,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
+    /************************************************************************** */
+
+    const vertexBuffer = device.createBuffer({
+        label: "Cell vertices",
+        size: vertices.byteLength,
+        usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+    });
+
+    device.queue.writeBuffer(vertexBuffer, /*bufferOffset=*/ 0, vertices);
+
+    const vertexBufferLayout: GPUVertexBufferLayout = {
+        arrayStride: 8,
+        attributes: [
+            {
+                format: "float32x2",
+                offset: 0,
+                shaderLocation: 0, // Position, see vertex shader
+            },
+        ],
+    };
+
+    const cellShaderModule = device.createShaderModule({
+        label: 'Cell shader',
+        code: shader
+    });
+
+    const bindGroupLayout = device.createBindGroupLayout({
+        label: "Cell Bind Group Layout",
+        entries: [
+            {
+                binding: 0,
+                visibility:
+                    GPUShaderStage.FRAGMENT,
+                buffer: {}, // Grid uniform buffer ;//3 default uniform
+            },
+            {
+                binding: 1,
+                visibility:
+                    GPUShaderStage.FRAGMENT,
+                buffer: {}, // Grid uniform buffer ;//3 default uniform
+            }
+        ],
+    });
+
+    const pipelineLayout = device.createPipelineLayout({
+        label: "Cell Pipeline Layout",
+        bindGroupLayouts: [bindGroupLayout],
+    });
+
+
+    const cellPipeline = device.createRenderPipeline({
+        label: "Cell pipeline",
+        layout: pipelineLayout,
+        vertex: {
+            module: cellShaderModule,
+            entryPoint: "vertexMain",
+            buffers: [vertexBufferLayout]
+        },
+        fragment: {
+            module: cellShaderModule,
+            entryPoint: "fragmentMain",
+            targets: [{
+                format: canvasFormat
+            }]
+        }
+    });
+
+
+    const bindgroup = device.createBindGroup({
+        label: "Cell renderer bind group A",
+        layout: bindGroupLayout, // Updated Line
+        entries: [
+            {
+                binding: 0,
+                resource: { buffer: uniformBuffer },
+            },
+            {
+                binding: 1,
+                resource: { buffer: frameUniformBuffer },
+            }
+        ],
+    })
+
+
+    function update() {
+        frame += 1;
+
+        frameCount[0] = frame;
+        device.queue.writeBuffer(frameUniformBuffer, 0, frameCount);
+
+        const encoder = device.createCommandEncoder();
+        const pass = encoder.beginRenderPass({
+            colorAttachments: [{
+                view: context.getCurrentTexture().createView(),
+                loadOp: "clear",
+                clearValue: { r: 0, g: 0, b: 0.4, a: 1 }, // New line
+                storeOp: "store",
+            }],
+        });
+
+
+        // After encoder.beginRenderPass()
+
+        pass.setPipeline(cellPipeline);
+        pass.setBindGroup(0, bindgroup)
+        pass.setVertexBuffer(0, vertexBuffer);
+        pass.draw(vertices.length / 2); // 6 vertices
+
+        // before pass.end()
+
+        pass.end();
+        // Finish the command buffer and immediately submit it.
+        device.queue.submit([encoder.finish()]);
+
+    }
+
+
+    if (options.update){
+        setInterval(update, options.update_interval);
+    }else{
+        update();
+    }
+}

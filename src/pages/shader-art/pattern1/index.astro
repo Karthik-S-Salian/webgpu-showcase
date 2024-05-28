@@ -1,0 +1,18 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Canva from "@components/ui/Canva.astro"
+---
+<Layout title="shader art">
+
+ <section>
+    <h2>Pattern 1</h2>
+    <Canva/>
+</section>
+</Layout>
+
+<script>
+    import vfShader from "./_shader.wgsl?raw";
+    import { init_and_run } from "@lib/pattern";
+
+    init_and_run(vfShader);
+</script>
