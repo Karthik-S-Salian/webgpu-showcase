@@ -24,7 +24,7 @@ fn fragmentMain2(@builtin(position) pos: vec4f) -> @location(0) vec4f {
     var uv = (pos.xy * 2.0 - uniforms.window_size) / uniforms.window_size.y;
     let uv0 = uv;
 
-    uv = fract(uv * 1.5)-.5;
+    uv = fract(uv * 1.5)- .5;
 
 
     var d = length(uv);
@@ -37,7 +37,7 @@ fn fragmentMain2(@builtin(position) pos: vec4f) -> @location(0) vec4f {
     d = 0.2 / d;
     col *= d;
 
-    return vec4f(col, 1);
+    return vec4f(col, 1.);
 }
 
 @fragment
@@ -48,10 +48,10 @@ fn fragmentMain(@builtin(position) pos: vec4f) -> @location(0) vec4f {
     var uv = (pos.xy * 2.0 - uniforms.window_size) / uniforms.window_size.y;
     let uv0 = uv;
 
-    var col = vec3f(0);
+    var col = vec3f(0.);
 
     for (var i = 0; i < 4; i++) {
-        uv = fract(uv * 1.4)-.5;
+        uv = fract(uv * 1.4)- .5;
         var d = length(uv)*sin(-length(uv0) + offset);
         col += palette(length(uv0), vec3f(0.5, 0.5, 0.5), vec3f(0.5, 0.5, 0.5), vec3f(1.0, 1.0, 1.0), vec3f(0.263, 0.416, 0.557));
 
@@ -63,5 +63,5 @@ fn fragmentMain(@builtin(position) pos: vec4f) -> @location(0) vec4f {
         col *= d;
     }
 
-    return vec4f(col, 1);
+    return vec4f(col, 1.);
 }

@@ -117,14 +117,14 @@ let i = cellIndex(cell.xy);
 
 // Conway's game of life rules:
 switch activeNeighbors {
-  case 2: { // Active cells with 2 neighbors stay active.
+  case 2u: { // Active cells with 2 neighbors stay active.
     cellStateOut[i] = cellStateIn[i];
   }
-  case 3: { // Cells with 3 neighbors become or stay active.
-    cellStateOut[i] = 1;
+  case 3u: { // Cells with 3 neighbors become or stay active.
+    cellStateOut[i] = 1u;
   }
   default: { // Cells with < 2 or > 3 neighbors become inactive.
-    cellStateOut[i] = 0;
+    cellStateOut[i] = 0u;
   }
 }
 }`,

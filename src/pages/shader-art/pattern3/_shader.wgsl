@@ -24,7 +24,7 @@ fn fragmentMain2(@builtin(position) pos: vec4f) -> @location(0) vec4f {
     var uv = (pos.xy * 2.0 - uniforms.window_size) / uniforms.window_size.y;
     let uv0 = uv;
 
-    uv = fract(uv * 1.5)-.5;
+    uv = fract(uv * 1.5)- .5;
 
 
     var d = length(uv);
@@ -37,33 +37,33 @@ fn fragmentMain2(@builtin(position) pos: vec4f) -> @location(0) vec4f {
     d = 0.2 / d;
     col *= d;
 
-    return vec4f(col, 1);
+    return vec4f(col, 1.);
 }
 
 fn sdBox(pos:vec2f,b:vec2f)->f32{
     let d= abs(pos) - b;
-    return length(max(d,vec2f(0))) + min(max(d.x,d.y),0.0);
+    return length(max(d,vec2f(0.))) + min(max(d.x,d.y),0.0);
 }
 
 @fragment
 fn fragmentMain(@builtin(position) pos: vec4f) -> @location(0) vec4f {
 
-    let offset = .01 * f32(frame);
+    let offset = 0.01 * f32(frame);
 
     var uv = (pos.xy * 2.0 - uniforms.window_size) / uniforms.window_size.y;
     let uv0 = uv;
-    var col = vec3f(0);
+    var col = vec3f(0.);
 
     for (var i = 0; i < 4; i++) {
-        uv = fract(uv * 1.2)-.5;
-        var d=smoothstep(0,.01,abs(sdBox(uv,vec2f(0.5,0.25))));
+        uv = fract(uv * 1.2)- .5;
+        var d=smoothstep(0.0,.1,abs(sdBox(uv,vec2f(0.5,0.25))));
         col += palette(d+offset, vec3f(0.5, 0.5, 0.5), vec3f(0.5, 0.5, 0.5), vec3f(1.0, 1.0, 1.0), vec3f(0.263, 0.416, 0.557));
 
         d = abs(d);
 
-        d = pow(0.1 / d,1.1);
+        d = pow(0.1 / f32(d),1.1);
         col *= d;
     }
 
-    return vec4f(col, 1);
+    return vec4f(col, 1.);
 }
