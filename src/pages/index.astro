@@ -20,7 +20,6 @@ import Layout from "src/layouts/Layout.astro";
         </section>
 
         <section id="gpu-check-section">
-            <h4>WebGPU Support Check</h4>
             <p>Check if your browser supports WebGPU:</p>
             <div id="gpu-status" style="padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem;">
                 Checking...
@@ -116,16 +115,24 @@ import Layout from "src/layouts/Layout.astro";
 </style>
 
 <script>
-    (function() {
+    (async function() {
         const statusEl = document.getElementById('gpu-status');
-        if (navigator.gpu) {
-            statusEl.textContent = '✅ WebGPU is supported in your browser!';
-            statusEl.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
-            statusEl.style.color = '#22c55e';
-        } else {
-            statusEl.textContent = '❌ WebGPU is not supported in your browser.';
-            statusEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-            statusEl.style.color = '#ef4444';
+        if (statusEl) {
+            try {
+                if (await navigator.gpu?.requestAdapter()) {
+                    statusEl.textContent = '✅ WebGPU is supported in your browser!';
+                    statusEl.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
+                    statusEl.style.color = '#22c55e';
+                } else {
+                    statusEl.textContent = '❌ WebGPU is not supported in your browser.';
+                    statusEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                    statusEl.style.color = '#ef4444';
+                }
+            } catch (e) {
+                statusEl.textContent = '❌ WebGPU failed to initialize.';
+                statusEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                statusEl.style.color = '#ef4444';
+            }
         }
     })();
 </script>
