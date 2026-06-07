@@ -7,67 +7,58 @@ import Layout from "src/layouts/Layout.astro";
         <section>
             <h4>What is WebGPU?</h4>
             <p>
-                WebGPU is a new, modern API for accessing the capabilities of
-                your GPU in web apps.
+                WebGPU is a new, modern API for accessing the capabilities of your GPU in web apps. 
+                It provides low-level access to graphics and compute shaders, enabling high-performance rendering, 
+                complex simulations, and machine learning tasks directly in the browser without plugins.
             </p>
+            <p>
+                Designed as the successor to WebGL, WebGPU offers better performance, lower CPU overhead, 
+                and a more modern programming model. It supports both graphics rendering and general-purpose 
+                compute operations, making it ideal for everything from interactive 3D experiences to 
+                data-parallel algorithms.
+            </p>
+        </section>
+
+        <section id="gpu-check-section">
+            <h4>WebGPU Support Check</h4>
+            <p>Check if your browser supports WebGPU:</p>
+            <div id="gpu-status" style="padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem;">
+                Checking...
+            </div>
         </section>
 
         <section>
             <aside>
-                WebGPU is currently in its working draft stage, meaning it's
-                still under development and not yet universally supported by all
-                browsers.
+                WebGPU is currently in its working draft stage, meaning it's still under development and not yet universally supported by all browsers.
             </aside>
         </section>
 
         <section>
-            <h4>Learning Resouces</h4>
+            <h4>Learning Resources</h4>
             <ul>
                 <li>
-                    <a
-                        href="https://codelabs.developers.google.com/your-first-webgpu-app#0"
-                        >Game of Life using compute shader by google</a
-                    >
+                    <a href="https://codelabs.developers.google.com/your-first-webgpu-app#0">Game of Life using compute shader by google</a>
                 </li>
-
                 <li>
-                    <a href="https://webgpufundamentals.org/"
-                        >Webgpu Fundamentals
-                    </a>
+                    <a href="https://webgpufundamentals.org/">Webgpu Fundamentals</a>
                 </li>
-
                 <li>
-                    <a href="https://github.com/gpuweb/"
-                        >Official Github repository
-                    </a>
+                    <a href="https://github.com/gpuweb/">Official Github repository</a>
                 </li>
-
                 <li>
                     <a href="https://www.w3.org/TR/webgpu/">w3c- webgpu docs</a>
                 </li>
-
                 <li>
-                    <a href="https://www.w3.org/TR/WGSL/"
-                        >WGSL (WebGPU Shading Language) docs</a
-                    >
+                    <a href="https://www.w3.org/TR/WGSL/">WGSL (WebGPU Shading Language) docs</a>
                 </li>
                 <li>
-                    <a href="https://webgpu.github.io/webgpu-samples/"
-                        >webgpu sample projects</a
-                    >
+                    <a href="https://webgpu.github.io/webgpu-samples/">webgpu sample projects</a>
                 </li>
-
                 <li>
-                    <a
-                        href="https://github.com/kishimisu/WebGPU-Fluid-Simulation"
-                        >WebGPU Fluid Simulation</a
-                    >
+                    <a href="https://github.com/kishimisu/WebGPU-Fluid-Simulation">WebGPU Fluid Simulation</a>
                 </li>
-
                 <li>
-                    Find more resouces <a
-                        href="https://github.com/mikbry/awesome-webgpu">here</a
-                    >
+                    Find more resources <a href="https://github.com/mikbry/awesome-webgpu">here</a>
                 </li>
             </ul>
         </section>
@@ -107,6 +98,12 @@ import Layout from "src/layouts/Layout.astro";
         border-radius: 0 0.375rem 0.375rem 0;
     }
 
+    #gpu-status {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: rgb(var(--text-primary));
+        font-weight: 500;
+    }
+
     @media (max-width: 768px) {
         article {
             padding: 0;
@@ -117,3 +114,18 @@ import Layout from "src/layouts/Layout.astro";
         }
     }
 </style>
+
+<script>
+    (function() {
+        const statusEl = document.getElementById('gpu-status');
+        if (navigator.gpu) {
+            statusEl.textContent = '✅ WebGPU is supported in your browser!';
+            statusEl.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
+            statusEl.style.color = '#22c55e';
+        } else {
+            statusEl.textContent = '❌ WebGPU is not supported in your browser.';
+            statusEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+            statusEl.style.color = '#ef4444';
+        }
+    })();
+</script>
