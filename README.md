@@ -1,54 +1,45 @@
-# Astro Starter Kit: Basics
+# WebGPU Playground
 
-```sh
-npm create astro@latest -- --template basics
-```
+A collection of interactive WebGPU experiments — shader art, ray marching, and concurrent simulations — rendered directly in the browser with zero dependencies on graphics libraries.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## What's Inside
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Demo | Description |
+|------|-------------|
+| **Shader Art** (Patterns 1–3) | Fragment-shader visuals using signed-distance functions and cosine palettes |
+| **Ray Marching** | Distance-field ray marching with smooth illumination |
+| **Conway's Game of Life** | A 64×64 cellular automaton driven entirely by a GPU compute shader, rendered to the screen in real time |
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+Each page is an independent entry point — open it in a WebGPU-compatible browser and watch the GPU do the work.
 
-## 🚀 Project Structure
+## Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+- **Framework:** [Astro](https://astro.build) (static site generation + page routing)
+- **Compute / Render:** Native [WebGPU](https://gpuweb.github.io/gpuweb/) API via TypeScript
+- **Shading Language:** [WGSL](https://www.w3.org/TR/WGSL/) (WebGPU Shading Language)
+- **Math helpers:** [`wgpu-matrix`](https://github.com/piantist/wgpu-matrix)
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Requirements
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+A browser with WebGPU support enabled:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Browser | Version / Status |
+|---------|-----------------|
+| Chrome / Edge | 113+ (stable) |
+| Firefox Nightly | 128+ (behind a flag) |
+| Safari | Technology Preview / 17.2+ (behind a flag) |
 
-Any static assets, like images, can be placed in the `public/` directory.
+The homepage includes a live WebGPU capability checker — it will tell you instantly whether your browser can run these demos.
 
-## 🧞 Commands
+## Learning Resources
 
-All commands are run from the root of the project, from a terminal:
+The demos are heavily inspired by community WebGPU examples — the best references used while building this project:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- [Game of Life using compute shader (Google Codelab)](https://codelabs.developers.google.com/your-first-webgpu-app#0)
+- [WebGPU Fundamentals](https://webgpufundamentals.org/)
+- [WebGPU Samples](https://webgpu.github.io/webgpu-samples/)
+- [awesome-webgpu (curated list)](https://github.com/kishimisu/WebGPU-Fluid-Simulation)
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Built with curiosity and a lot of `cos` palettes. Enjoy the demos!
